@@ -1,2 +1,6 @@
-Add bot.py# loan-bot
-Telegram loan application bot bult with python
+# loan-bot
+
+Telegram loan application bot built with Python.
+
+## Files
+- bot.py
