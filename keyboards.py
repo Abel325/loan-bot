@@ -1,8 +1,12 @@
-from telegram import ReplyKeyboardMarkup, KeyboardButton
+from telegram import (
+    ReplyKeyboardMarkup
+)
 
 
-# Start/Register button
+# ================= REGISTER =================
+
 def register_keyboard():
+
     keyboard = [
         ["📝 Register"]
     ]
@@ -13,13 +17,49 @@ def register_keyboard():
     )
 
 
-# Main menu after registration
-def main_menu_keyboard():
+# ================= EMPLOYMENT =================
+
+def employment_keyboard():
+
     keyboard = [
-        ["💰 Apply for Loan"],
-        ["📋 Check Loan Status"],
-        ["ℹ️ Loan Requirements"],
-        ["📞 Contact Support"]
+
+        ["Employed"],
+
+        ["Self Employed"],
+
+        ["Business Owner"],
+
+        ["Student"],
+
+        ["Unemployed"]
+
+    ]
+
+    return ReplyKeyboardMarkup(
+        keyboard,
+        resize_keyboard=True,
+        one_time_keyboard=True
+    )
+
+
+# ================= LOAN AMOUNT =================
+
+def loan_amount_keyboard():
+
+    keyboard = [
+
+        ["KSh 5,000", "KSh 10,000"],
+
+        ["KSh 15,000", "KSh 20,000"],
+
+        ["KSh 25,000", "KSh 30,000"],
+
+        ["KSh 50,000", "KSh 100,000"],
+
+        ["KSh 200,000", "KSh 500,000"],
+
+        ["KSh 1,000,000"]
+
     ]
 
     return ReplyKeyboardMarkup(
@@ -28,13 +68,18 @@ def main_menu_keyboard():
     )
 
 
-# Employment status options
-def employment_keyboard():
+# ================= REPAYMENT PERIOD =================
+
+def repayment_period_keyboard():
+
     keyboard = [
-        ["Employed"],
-        ["Self Employed"],
-        ["Business Owner"],
-        ["Unemployed"]
+
+        ["1 Month", "3 Months"],
+
+        ["6 Months", "12 Months"],
+
+        ["18 Months", "24 Months"]
+
     ]
 
     return ReplyKeyboardMarkup(
@@ -44,28 +89,44 @@ def employment_keyboard():
     )
 
 
-# Loan amount buttons
-def loan_amount_keyboard():
+# ================= MAIN MENU =================
+
+def main_menu_keyboard():
+
     keyboard = [
-        ["KSh 5,000", "KSh 10,000"],
-        ["KSh 15,000", "KSh 20,000"],
-        ["KSh 25,000", "KSh 30,000"],
-        ["KSh 50,000", "KSh 100,000"],
-        ["KSh 200,000", "KSh 500,000"],
-        ["KSh 1,000,000"]
+
+        ["💰 Apply for Loan"],
+
+        ["📋 Check Loan Status", "📄 Loan Statement"],
+
+        ["💳 Make Payment", "📅 Repayment Schedule"],
+
+        ["👤 My Profile", "✏️ Update Profile"],
+
+        ["ℹ️ Loan Requirements", "📞 Contact Support"]
+
     ]
 
     return ReplyKeyboardMarkup(
         keyboard,
-        resize_keyboard=True,
-        one_time_keyboard=True
+        resize_keyboard=True
     )
 
 
-# Cancel button
-def cancel_keyboard():
+# ================= ADMIN MENU =================
+
+def admin_keyboard():
+
     keyboard = [
-        ["❌ Cancel"]
+
+        ["📊 Dashboard"],
+
+        ["👥 Users", "📋 Loans"],
+
+        ["💳 Payments", "🚚 Disbursements"],
+
+        ["📤 Export Reports"]
+
     ]
 
     return ReplyKeyboardMarkup(

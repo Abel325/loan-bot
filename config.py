@@ -1,12 +1,5 @@
-import os
-from dotenv import load_dotenv
+TOKEN = "8870513554:AAFHGMd1Mx-LFuB8auxmvVeXYf6SqFBkoZE"
 
-load_dotenv()
+SUPPORT_CONTACT = "@your_support"
 
-BOT_TOKEN = os.getenv("BOT_TOKEN")
-
-ADMIN_ID = os.getenv("ADMIN_ID")
-
-DATABASE_NAME = "loanbot.db"
-
-SUPPORT_CONTACT = "@YourSupportUsername"
+ADMIN_ID = 8159228079
