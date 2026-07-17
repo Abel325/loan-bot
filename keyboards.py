@@ -8,8 +8,8 @@ from telegram import (
 def register_keyboard():
 
     keyboard = [
-        ["📝 Register"]
-    ]
+        
+    
 
     return ReplyKeyboardMarkup(
         keyboard,

